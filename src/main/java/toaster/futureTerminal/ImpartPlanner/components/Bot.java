@@ -1,9 +1,8 @@
 package toaster.futureTerminal.ImpartPlanner.components;
 
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
-@Component
+
 public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
@@ -16,5 +15,10 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {}
+    public void onUpdateReceived(Update update) {
+        var msg = update.getMessage();
+        var user = msg.getFrom();
+
+        System.out.println(user.getUserName() + " wrote " + msg.getText());
+    }
 }
