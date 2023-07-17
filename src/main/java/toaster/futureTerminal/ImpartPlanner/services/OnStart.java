@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import toaster.futureTerminal.ImpartPlanner.components.Bot;
 
@@ -14,19 +15,17 @@ import toaster.futureTerminal.ImpartPlanner.components.Bot;
 public class OnStart {
 
     private static final Logger onStartLogger = LoggerFactory.getLogger(OnStart.class);
+
     @EventListener(ApplicationReadyEvent.class)
-    public void runOnStart(){
+    public void runOnStart() throws TelegramApiException {
         onStartLogger.info("OnStart is running...");
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        Bot bot = new Bot();
         try {
-            buildBot();
+            botsApi.registerBot(bot);
         } catch (Exception exception) {
             onStartLogger.error("Bot is not built");
         }
         onStartLogger.info("OnStart is finished");
-    }
-
-    private void buildBot() throws TelegramApiException {
-        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        botsApi.registerBot(new Bot());
     }
 }
