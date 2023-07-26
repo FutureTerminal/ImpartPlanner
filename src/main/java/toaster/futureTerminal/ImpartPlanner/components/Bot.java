@@ -1,12 +1,26 @@
 package toaster.futureTerminal.ImpartPlanner.components;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+@Component
 public class Bot extends TelegramLongPollingBot {
+
+    private final Environment environment;
+
+    @Autowired
+    public Bot(Environment environment) {
+        this.environment = environment;
+    }
+
     @Override
     public String getBotUsername() {
         return "ImpartPlanner_bot";
@@ -14,7 +28,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "6098000257:AAFMPBRfAtJaNczpfjbeljun92yJKXARj1Q";
+        return this.environment.getProperty("apiKey");
     }
 
     @Override

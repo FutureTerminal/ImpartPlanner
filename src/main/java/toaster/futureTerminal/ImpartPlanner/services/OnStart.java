@@ -1,5 +1,6 @@
 package toaster.futureTerminal.ImpartPlanner.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +16,21 @@ import toaster.futureTerminal.ImpartPlanner.components.Bot;
 public class OnStart {
 
     private static final Logger onStartLogger = LoggerFactory.getLogger(OnStart.class);
+    private Bot bot;
+
+    @Autowired
+    public OnStart(Bot bot) {
+        this.bot = bot;
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void runOnStart() throws TelegramApiException {
         onStartLogger.info("OnStart is running...");
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        Bot bot = new Bot();
         try {
             botsApi.registerBot(bot);
         } catch (Exception exception) {
-            onStartLogger.error("Bot is not built");
+            onStartLogger.error("Bot is not built", exception);
         }
         onStartLogger.info("OnStart is finished");
     }
